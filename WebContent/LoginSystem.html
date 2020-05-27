@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="windows-1255">
+<title>LoginCouponSystem</title>
+<script src="./JS/login.js"></script>
+</head>
+<body style="text-align: center">
+
+	<h1 >Welcome To The Coupon System</h1>
+	<h2>Please log into your account</h2>
+
+	User Name:
+	<input type="text" id="username" value="admin" />
+	<br />
+	Password:
+	<input type="text" id="password" value="1234" />
+	<br />
+	<br />
+	<input type="radio" name="client" value="customer"  > Customer
+	<input type="radio" name="client" value="company" > Company
+	<input type="radio" name="client" value="admin" checked> Administrator
+	<br />	<br />
+	<input type="button" value="Login" onclick="login()" style="font-size: 20pt" />
+
+	<p id="message"></p>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html ng-app="administrator">
+<head>
+<meta charset="windows-1255">
+<title>Admin Coupon Services</title>
+	<link rel="stylesheet" type="text/css" href="./CSS/client.css"></link>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+	<link rel="stylesheet" href="./bower_components/Ladda-master/dist/ladda-themeless.min.css" ></link>
+	<!-- jQuery library -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" ></script>
+	<script src="./bower_components/angular/angular.min.js" ></script>
+    <script type="text/javascript" src="./JS/coupon_system.js" ></script>
+	<!-- Latest compiled JavaScript -->
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+	<script src="./bower_components/angular-auto-validate/dist/jcs-auto-validate.min.js" ></script>
+	<script src="./bower_components/Ladda-master/dist/spin.min.js" ></script>
+	<script src="./bower_components/Ladda-master/dist/ladda.min.js" ></script>
+	<script src="./bower_components/angular-ladda-master/dist/angular-ladda.min.js" ></script>
+</head>
+
+<body >
+
+<div class="facade">
+		
+		<div class="logo">
+			<h1 style="color: white;">Coupon System</h1>
+		</div>
+		
+	<section ng-controller="AdminController as right">
+		<div class="left" >
+			<h2 style="text-align: center;">Menu</h2>
+			<ul class="nav nav-pills">
+				<li ng-class="{ active: right.isSelected(1) }" style="width:100%">
+					<button class="btn btn-default btn-block" ng-click="right.selectTab(1); getComps()">All Companies</button>
+				</li>
+				<li ng-class="{ active: right.isSelected(2) } " style="width:100%">
+					<button class="btn btn-default btn-block"  ng-click="right.selectTab(2)">Add Company</button>
+				</li>
+				<li ng-class="{ active: right.isSelected(3) }" style="width:100%">
+					<!--<button ng-click="right.selectTab(3) ">Company</button>-->
+				</li>
+				<li ng-class="{ active: right.isSelected(4) }" style="width:100%">
+					<button class="btn btn-default btn-block" ng-click="right.selectTab(4); getCusts()">All Customers</button>
+				</li>
+				<li ng-class="{ active: right.isSelected(5) }" style="width:100%">
+					<button class="btn btn-default btn-block"  ng-click="right.selectTab(5)">Add Customer</button>
+				</li>
+				<li ng-class="{ active: right.isSelected(6) }" style="width:100%">
+					<!-- <button ng-click="right.selectTab(6)">Customer</button> -->
+				</li>
+			<!-- 	<li ng-class="{ active: right.isSelected(7) }">
+					<button ng-click="right.selectTab(7)">All Coupons</button>
+				</li>
+				<li ng-class="{ active: right.isSelected(8) }">
+					<button ng-click="right.selectTab(8)">Coupon</button>
+				</li>  -->
+			</ul>
+		</div>
+		
+		<div ng-include="'adminCompany.html'"></div>
+		
+		<div ng-include="'adminCustomer.html'"></div>
+	
+	</div>
+	<div class="right" ng-show="right.isSelected(8)">
+	</div>
+	</section>
+</body>
+</html>

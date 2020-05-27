@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html ng-app="administrator">
+<head>
+<meta charset="windows-1255">
+<title>Admin Coupon Services</title>
+	<link rel="stylesheet" type="text/css" href="./CSS/client.css"></link>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+	<link rel="stylesheet" href="./bower_components/Ladda-master/dist/ladda-themeless.min.css" ></link>
+	<!-- jQuery library -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" ></script>
+	<script src="./bower_components/angular/angular.min.js" ></script>
+    <script type="text/javascript" src="./JS/coupon_system.js" ></script>
+	<!-- Latest compiled JavaScript -->
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+	<script src="./bower_components/angular-auto-validate/dist/jcs-auto-validate.min.js" ></script>
+	<script src="./bower_components/Ladda-master/dist/spin.min.js" ></script>
+	<script src="./bower_components/Ladda-master/dist/ladda.min.js" ></script>
+	<script src="./bower_components/angular-ladda-master/dist/angular-ladda.min.js" ></script>
+</head>
+
+<body >
+
+<div class="facade">
+		
+		<div class="logo">
+			<h1 style="color: white;">Coupon System</h1>
+		</div>
+		
+	<section ng-controller="CompanyController as right">
+		<div class="left" >
+			<h2 style="text-align: center;">Menu</h2>
+			<ul class="nav nav-pills">
+				<li ng-class="{ active: right.isSelected(1) }" style="width:100%">
+					<button class="btn btn-default btn-block" ng-click="right.selectTab(1); getCoupons()">All Coupons</button>
+				</li>
+				<li ng-class="{ active: right.isSelected(2) } " style="width:100%">
+					<button class="btn btn-default btn-block"  ng-click="right.selectTab(2); resetAddCoupForm()">Add Coupon</button>
+				</li>
+				<li ng-class="{ active: right.isSelected(3) }" style="width:100%">
+					<!-- <button class="btn btn-default btn-block"  ng-click="right.selectTab(3)">Update Coupon</button> -->
+				</li>
+				<li ng-class="{ active: right.isSelected(4) }" style="width:100%">
+					<button class="btn btn-default btn-block" ng-click="right.selectTab(4); right.couponTypeForm.$setPristine()">Coupons By Type</button>
+				</li>
+				<li ng-class="{ active: right.isSelected(5) }" style="width:100%">
+					<button class="btn btn-default btn-block"  ng-click="right.selectTab(5); right.couponPriceForm.$setPristine()">Coupons By Price</button>
+				</li>
+				<li ng-class="{ active: right.isSelected(6) }" style="width:100%">
+					<button class="btn btn-default btn-block" ng-click="right.selectTab(6); right.couponDateForm.$setPristine()">Coupons By Date</button>
+				</li>
+				<li ng-class="{ active: right.isSelected(7) }" style="width:100%">
+				</li>
+			</ul>
+		</div>
+		
+		
+		<div class="right" ng-show="right.isSelected(1)">
+						
+			<h2>&nbsp;&nbsp;All Coupons</h2>
+			
+				<div class="row">
+					<div class="col-md-8">
+						<form class="form-inline well well-sm">
+							<span class="glyphicon glyphicon-search"></span>
+							
+							<div class="form-group">
+								<input	type="text"
+										class="form-control"
+										id="name"
+										ng-model="search.$"
+										placeholder="Search..."
+								/>
+							</div>
+						</form>
+					</div>
+				</div>
+				
+			<table  class="table table-bordered">
+			<tr>
+			
+			<th>Title
+				<span 	ng-click="orderCoupons='title'"
+							class="glyphicon glyphicon-menu-up">
+					</span>
+					<span 	ng-click="orderCoupons='-title'"
+							class="glyphicon glyphicon-menu-down">
+					</span>
+			</th>
+			<th>EndDate</th>
+			<th>Type</th>
+			<th>Price</th>
+			</tr>
+
+			<tr ng-repeat="coupon in sampleCoups  | filter:search | orderBy:orderCoupons | limitTo : right.limit"
+				ng-style="{'background-color': $id == selectedIndex ? 'lightgray' :''}"
+				ng-click="selectCoupon($id)">
+			<td><button class="btn btn-primary btn-block btn-sm" 
+						ng-click="showInCouponPage(coupon); 
+								right.selectTab(3);
+								updateCoupForm.endDate.$setPristine();
+								updateCoupForm.price.$setPristine()"
+						style="float:left"> {{coupon.title}}</td>
+			<td> {{coupon.endDate | date:"shortDate"}}</td>
+			<td> {{coupon.type}}</td>
+			<td> {{coupon.price | number : 2}}</td>
+			</tr>
+			<tr ng-show="showButton">
+				<td colspan="4"><button style="width:100%"
+										class="btn btn-primary" 
+										ng-show="right.limit"	
+										ng-click="right.limit = undefined">
+						Click for all {{sampleCoups.length}} 
+						coupons or use the search option...</button>
+				</td>
+			</tr>
+			</table>
+			
+		</div>
+		
+		
+		<div class="right" ng-show="right.isSelected(2)">
+		
+			<h2>&nbsp;&nbsp;Create New Coupon</h2>
+			
+			<form 	name="right.addCoupForm"
+					ng-submit="addCoupfunction(addCoup); right.selectTab(7) "
+					novalidate="novalidate"
+					>
+	
+			<div class="form-group">
+				<label name="title" class="control-label">
+				Title: </label> 
+				<input	type="text"
+						id="title"
+						maxlength="20"
+						class="form-control"
+						ng-model="right.addCoup.title"
+						required="required"
+						name="title"
+						ng-pattern-err-type="badUserName"
+						ng-pattern="/^[A-Za-z0-9_]{1,20}$/"/>
+			</div>
+			<div class="row">
+				<div class="form-group col-xs-6">
+					<label name="price" class="control-label">
+					Price:
+					</label>
+					<input	type="number"
+							step="0.01"
+							id="price"
+							maxlength="10"
+							min="0"
+							class="form-control"
+							ng-model="right.addCoup.price"
+							ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+							ng-pattern-err-type="validPrice"
+							required="required"
+							name="price"
+							ng-maxlength="10"
+							ng-minLength="1"/>
+				</div>
+				
+				<div class="form-group col-xs-6">
+					<label name="amount" class="control-label">
+					Amount:
+					</label>
+					<input	type="number"
+							name="amount"
+							id="amount"
+							maxlength="10"
+							class="form-control"
+							ng-model="right.addCoup.amount"
+							required="required"
+							/>
+				</div>
+			</div>
+					<div class="row">
+						<div class="form-group col-xs-6">
+							<label name="endDate" class="control-label"> End Date:</label>
+								<input
+								type="Date" id="endDate"  class="form-control"
+								ng-model="right.addCoup.endDate" required="required" name="endDate"/>
+						</div>
+						<div class="form-group col-xs-6">
+							<label name="type" class="control-label"> Select Type:</label> 
+							<select class="form-control" ng-model="right.addCoup.type" ng-init="RESTURANTS" required="required">
+								<option value=''>- Please Choose -</option>
+								<option value="RESTURANTS">RESTURANTS</option>
+								<option value="ELECTRICITY">ELECTRICITY</option>
+								<option value="FOOD">FOOD</option>
+								<option value="HEALTH">HEALTH</option>
+								<option value="SPORTS">SPORTS</option>
+								<option value="CAMPING">CAMPING</option>
+								<option value="TRAVELLING">TRAVELLING</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+				<label name="message" class="control-label">
+				Message:
+				</label>
+				<input	type="text"
+						name="message"
+						ng-init="right.addCoup.message=''"
+						id="message"
+						maxlength="20"
+						class="form-control"
+						ng-model="right.addCoup.message"
+						ng-pattern="/^[a-zA-Z\d\-\_\ ]+$/"
+						ng-trim="false"
+						required="required"
+						/>
+			</div>
+			
+			<div class="form-group">
+				<label name="amount" class="control-label">
+				Image:
+				</label>
+				<input	type="text"
+						name="image"
+						ng-init="right.addCoup.image=''"
+						id="image"
+						maxlength="20"
+						class="form-control"
+						ng-model="right.addCoup.image"
+						placeholder="-Enter a link to an image-"
+						required="required"
+						/>
+			</div>
+	
+			<div class="form-group col-xs-4">
+				<button class="btn btn-primary"
+						ladda="submitting"
+						data-style="expand-right"
+						type="submit">
+					<span ng-show="!submitting">Create coupon</span>
+					<span ng-show="submitting">Creating coupon</span>
+				</button>
+			</div>
+		</form>
+			<div>
+					<button class="btn btn-primary"
+							ng-click="right.resetAddCoupForm()">
+							Reset form</button>
+			</div>
+	</div>
+	
+	<div class="right" ng-show="right.isSelected(3)">
+
+		<h2 align="center">{{myCoupon.title}} Coupon</h2>
+
+		<table	ng-style="{'width':'100%', 'float':'left',  'word-wrap':'break-word'}">
+			<tr>
+				<td>type:</td>
+				<td>{{myCoupon.type}}</td>
+			</tr>
+			<tr>
+				<td>price:</td>
+				<td>{{myCoupon.price | number : 2}}</td>
+			</tr>
+			<tr>
+				<td><button class="btn btn-primary"
+						ng-click="updateCouponPrice(updateCoupon.price); right.selectTab(7)"
+						>Update
+						Price:</button></td>
+				<td><input 	type="number"  name="price"  id="price" 
+							step="any"
+							maxlength="20" class="form-control" 
+							ng-model="updateCoupon.price"/>
+					</div></td>
+			</tr>
+			<tr></tr>
+			<tr>
+				<td ng-style="{'width':'40%'}">Current Start Date:</td>
+				<td>{{myCoupon.startDate | date : "yyyy-MM-dd"}}</td>
+			</tr>
+			<tr>
+				<td>Current End Date:</td>
+				<td>{{myCoupon.endDate | date : "yyyy-MM-dd"}}</td>
+			</tr>
+			<tr>
+				<td><button class="btn btn-primary"
+						ng-click="updateCouponEndDate(updateCoupon.endDate); right.selectTab(7)">
+						Update End Date:</button></td>
+				<td><input type="date" id="endDate" class="form-control"
+					ng-model="updateCoupon.endDate" name="endDate"
+					ng-min="myCoupon.startDate | date" /></td>
+			</tr>
+			<tr>
+				<td>Amount:</td>
+				<td>{{myCoupon.amount}}</td>
+			</tr>
+			<tr>
+				<td>Amount Left:</td>
+				<td>{{myCoupon.amountLeft}}</td>
+			</tr>
+			<td colspan="2">Message: {{myCoupon.message}}</td>
+		</table>
+		
+		<div>
+			<button class="btn btn-danger" data-style="expand-right"
+				ng-click="	removeCoupon(myCoupon);
+							right.selectTab(2)">
+				Delete Coupon</button>
+		</div>
+		
+	</div>
+
+			<div class="right" ng-show="right.isSelected(4)">
+			<br><br>
+			
+				<form 	id="frmOptions" 
+							class="span12" 
+							name="right.couponTypeForm" 
+							ng-submit="	getCouponsByType(right.getCoupBy.type);  
+										right.selectTab(1)"
+							novalidate="novalidate">
+					    <div class="row-fluid">   
+					        <div class="form-group">
+					            <label class="control-label">Choose the type of coupons you would like to watch:</label>
+					            <div class="input-group ">
+					                		<select class="form-control col-xs-6"
+												ng-model="right.getCoupBy.type" 
+												required="required">
+												<option value=''>- Please Choose -</option>
+												<option value="RESTURANTS">		RESTURANTS</option>
+												<option value="ELECTRICITY">	ELECTRICITY</option>
+												<option value="FOOD">			FOOD</option>
+												<option value="HEALTH">			HEALTH</option>
+												<option value="SPORTS">			SPORTS</option>
+												<option value="CAMPING">		CAMPING</option>
+												<option value="TRAVELLING">		TRAVELLING</option>
+											</select>
+					                <span class="input-group-btn">
+						
+										<button class="btn btn-primary" 
+												type="submit">
+												Show by type</button>
+					
+									</span>
+					            </div>
+					        </div>
+					    </div>
+					</form>
+ 			</div>
+			<div class="right" ng-show="right.isSelected(5)">
+			<br><br>
+			<form 	id="frmOptions" 
+							class="span12" 
+							name="right.couponPriceForm" 
+							ng-submit="	getCouponsByPrice(right.getCoupBy.price);  
+										right.selectTab(1)"
+							novalidate="novalidate">
+					    <div class="row-fluid">   
+					        <div class="form-group">
+					            <label class="control-label">Enter highest price of coupons you would like to watch:</label>
+					            <div class="input-group ">
+					                <input	type="number"
+											step="0.01"
+											id="price"
+											maxlength="10"
+											min="0"
+											class="form-control"
+											ng-model="right.getCoupBy.price"
+											ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+											ng-pattern-err-type="validPrice"
+											required="required"
+											name="price"
+											ng-maxlength="10"
+											ng-minLength="1">
+					                <span class="input-group-btn">
+						
+										<button class="btn btn-primary" 
+												type="submit">
+												Show by price</button>
+					
+									</span>
+					            </div>
+					        </div>
+					    </div>
+					</form>
+			</div>
+			<div class="right" ng-show="right.isSelected(6)">
+					<br><br>
+					
+					<form 	id="frmOptions" 
+							class="span12" 
+							name="right.couponDateForm" 
+							ng-submit="	getCouponsByEndDate(right.getCoupByEndDate.endDate);  
+										right.selectTab(1)"
+							novalidate="novalidate">
+					    <div class="row-fluid">   
+					        <div class="form-group">
+					            <label class="control-label">Enter highest price of coupons you would like to watch:</label>
+					            <div class="input-group ">
+					                <input
+											type="Date" 
+											id="endDate"  
+											class="form-control"
+											ng-model="right.getCoupByEndDate.endDate" 
+											required="required" 
+											name="endDate"/>
+					                <span class="input-group-btn">
+						
+										<button class="btn btn-primary" 
+												type="submit">
+												Show by Last Date</button>
+					
+									</span>
+					            </div>
+					        </div>
+					    </div>
+					</form>
+			</div>
+		
+		<div class="right" ng-show="right.isSelected(7)">
+		<br><br><br>
+					<h2 align="center"><------- What's next?</h2>
+		</div>
+		</div>
+	</section>
+	</div>
+</body>
+</html>
